@@ -24,8 +24,10 @@ model = genai.GenerativeModel(
 initial_history = [
     {
         "role": "user",
-        "parts": [
-            "Generate a marketing content or blog for a company's products and services. Generate this content referring to the URL of that company's website entered by the user. The content should be original, appealing and knowledgeable to potential customers. The content should mention the company name wherever it is required. Make sure the content is approximately 400 words in length, suitable to an online audience. Keep your response limited to the context of marketing content generation only and ",
+        "parts": ["Pretend you are an expert in generating marketing content or blog for products and services offered by any company.\
+      You just need the url link of that company's website from the user to collect information and learn about the company.\
+      You can handle modify the content based on the user feedback. If queries are ambiguous then you ask for more details.\
+      You don't know about anything else in the world, so you refrain from responding to any other type of queries.",
         ],
     },
     {
@@ -37,12 +39,16 @@ initial_history = [
 ]
 
 # Streamlit app setup
-st.title("Marketing Content Generator")
+st.title(":pencil: Marketing Content Generator")
 
 # Initialize chat history
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = initial_history
     st.session_state['display_history'] = []
+
+# Initialize temporary input storage
+if 'temp_input' not in st.session_state:
+    st.session_state['temp_input'] = ""
 
 # Function to handle user input and model response
 def generate_response(user_input):
@@ -63,7 +69,7 @@ if st.session_state['display_history']:
         st.write(chat)
 
 # Input field for user queries
-user_input = st.text_input("Enter your query:")
+user_input = st.text_input("Enter your query:", value=st.session_state['temp_input'])
 
 # Generate button
 if st.button("Generate"):
@@ -71,5 +77,8 @@ if st.button("Generate"):
         st.session_state['display_history'].append(f"You: {user_input}")
         response_text = generate_response(user_input)
         st.session_state['display_history'].append(f"Bot: {response_text}")
+        st.session_state['temp_input'] = ""  # Clear the temporary input
         st.rerun()
         
+# Update temporary input storage
+st.session_state['temp_input'] = " "
