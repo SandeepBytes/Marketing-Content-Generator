@@ -39,16 +39,16 @@ initial_history = [
 ]
 
 # Streamlit app setup
-st.title(":pencil: Marketing Content Generator")
+st.title("Marketing Content Generator :pencil:")
 
 # Initialize chat history
 if 'chat_history' not in st.session_state:
     st.session_state['chat_history'] = initial_history
     st.session_state['display_history'] = []
 
-# Initialize temporary input storage
-if 'temp_input' not in st.session_state:
-    st.session_state['temp_input'] = ""
+# Initialize input key
+if 'input_key' not in st.session_state:
+    st.session_state['input_key'] = 0
 
 # Function to handle user input and model response
 def generate_response(user_input):
@@ -69,7 +69,7 @@ if st.session_state['display_history']:
         st.write(chat)
 
 # Input field for user queries
-user_input = st.text_input("Enter your query:", value=st.session_state['temp_input'])
+user_input = st.text_input("Enter your query:", key=f"user_input_{st.session_state['input_key']}")
 
 # Generate button
 if st.button("Generate"):
@@ -77,8 +77,5 @@ if st.button("Generate"):
         st.session_state['display_history'].append(f"You: {user_input}")
         response_text = generate_response(user_input)
         st.session_state['display_history'].append(f"Bot: {response_text}")
-        st.session_state['temp_input'] = ""  # Clear the temporary input
+        st.session_state['input_key'] += 1  # Increment the key to force a new input field
         st.rerun()
-        
-# Update temporary input storage
-st.session_state['temp_input'] = " "
