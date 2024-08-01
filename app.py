@@ -38,7 +38,7 @@ initial_history = [
     },
 ]
 
-# Streamlit app setup
+## Streamlit app setup
 st.title("Marketing Content Generator :pencil:")
 
 # Initialize chat history
